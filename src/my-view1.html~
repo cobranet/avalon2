@@ -1,0 +1,90 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/facebook-login/facebook-login.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="redux-store.html">
+<link rel="import" href="av-open-games.html">
+<dom-module id="my-view1">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+    </style>
+    <div class="card">
+	<img src= "[[resp.picture.data.url]]"/>
+	<facebook-login
+	  appID="520038294742546"
+          logout-link graph-url="me?fields=name,email,birthday,picture"
+          scope="public_profile email user_birthday"
+          graph-response="{{resp}}"
+          auto-api-call
+	>
+	</facebook-login>
+    </div>
+  </template>
+
+  <script>
+   class MyView1 extends ReduxMixin(Polymer.Element) {
+       static get is() { return 'my-view1'; }
+       static get actions() {
+	   return {
+	       signin(userid) {
+		   return {
+		       type: 'SIGN_IN',
+		       userid: userid
+		   };
+	       },
+	       signout(userid) {
+		   return {
+		       type: 'SIGN_OUT',
+		       userid: userid
+		   };
+	       }
+	   };
+       }
+       static get properties() {
+	   return {
+	       appState: {
+		   type: String,
+		   statePath: "appState"
+	       },
+	       resp: {
+		   type: Object,
+		   observer: '_fbresponse'
+	       }
+	   }
+       }
+       _fbresponse(value) {
+	   this._sendSignIn(value.email);
+       }
+       
+       _sendSignIn(event){
+	   super.connectedCallback();
+	   this.dispatch("signin","cobranet");   
+       }
+       _sendSignOut(event){
+	   super.connectedCallback();
+	   this.dispatch("signout","cobranet");   
+       }
+       ready() {
+	   super.ready();
+	   window.addEventListener('signin-not-authorized', () => this._sendSignIn());
+	   window.addEventListener('signin-not-logged-in', () => this._sendSignOut());
+       }
+
+
+    }
+   window.customElements.define(MyView1.is, MyView1);
+  </script>
+</dom-module>

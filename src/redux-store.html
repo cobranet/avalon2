@@ -1,0 +1,27 @@
+<link rel="import" href="../bower_components/polymer-redux/polymer-redux.html">
+<script>
+ 
+ const initialState  = {
+     appState: "NOT_LOGGED_IN",
+     signIN: false,
+     openGames: { page: 1 , total_pages: 10 ,
+		  games: [ { owner: { name: "Bratislav" , image: "cobranet.png"} , max_players: 4   },
+			   { owner: { name: "Mika" , image: "mika.png" }, max_players: 6 }
+		  ] } 
+ }
+ const reducer = function(state,action){
+     var new_state;
+     if(!state){
+	 return initialState;
+     }
+     switch(action.type){
+	 case "SIGN_IN":
+	     return Object.assign({},state,{signIN: true,appState: "LOGGED_IN" });
+	 case "SIGN_OUT":
+	     return Object.assign({},state,{signIN: false,appState: "NOT_LOGGED_IN" });
+     }
+ }
+ const store = Redux.createStore(reducer,
+				 Redux.applyMiddleware(ReduxThunk.default,dataService));
+ const ReduxMixin = PolymerRedux(store);
+</script>

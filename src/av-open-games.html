@@ -1,0 +1,40 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="redux-store.html">
+<link rel="import" href="av-open-game.html">
+<dom-module id="av-open-games">
+    <template>
+	<style>
+	 :host {
+             display: block;
+             padding: 16px;
+	 }
+	</style>
+	Page: [[page]]/[[total_pages]]
+	<template is="dom-repeat" items="[[games]]">
+	    <av-open-game game="[[item]]"></av-open-game>
+	</template>
+    </template>
+    <script>
+     
+     class AvOpenGames extends ReduxMixin(Polymer.Element) {
+	 static get is() { return 'av-open-games'; }
+	 static get properties(){
+	     return {
+		 page: {
+		     type: Number,
+		     statePath: "openGames.page"
+		 },
+		 total_pages: {
+		     type: Number,
+		     statePath: "openGames.total_pages"
+		 },
+		 games: {
+		     type: Array,
+		     statePath: "openGames.games"
+		 }
+	     }
+	 }
+     }
+     customElements.define(AvOpenGames.is, AvOpenGames);
+    </script>
+</dom-module>
