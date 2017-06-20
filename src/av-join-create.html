@@ -1,0 +1,51 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="redux-store.html">
+<dom-module id="av-join-create">
+    <template>
+	<style>
+	 :host {
+             display: block;
+             padding: 16px;
+	 }
+	</style>
+	<paper-button on-tap="_join">Join</paper-button>
+	<paper-button on-tap="_create">Create</paper-button>
+    </template>
+    <script>
+     
+     class AvJoinCreate extends ReduxMixin(Polymer.Element) {
+	 static get is() { return 'av-join-create'; }
+	 static get actions() {
+	     return {
+		 join(){
+		     return {
+			 type: "JOIN"
+		     }
+		 },
+		 create(){
+		     return {
+			 type: "CREATE"
+		     }
+		 }
+		 
+	     }
+	 }
+	 static get properties(){
+	     return {
+		 game: {
+		     type: Object
+		 }
+	     }
+	     
+	 }
+	 _join(){
+	     this.dispatch("join");
+	 }
+	 _create(){
+	     this.dispatch("create");
+	 }
+     }
+     customElements.define(AvJoinCreate.is, AvJoinCreate);
+    </script>
+</dom-module>

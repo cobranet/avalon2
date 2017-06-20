@@ -21,8 +21,7 @@
 	 }
 	</style>
 	<div class="card">
-	    [[appState]]
-	    <img hidden$="{{_logged(appState)}}" src= "[[resp.picture.data.url]]"/>
+	    <img hidden$="{{_logged(resp)}}" src= "[[resp.picture.data.url]]"/>
 	    <facebook-login
 		appID="520038294742546"
 		logout-link graph-url="me?fields=name,email,birthday,picture"
@@ -39,39 +38,41 @@
 	 static get is() { return 'av-login'; }
 	 static get actions() {
 	     return {
-		 signin(userid) {
+		 signin(data) {
 		     return {
 			 type: 'SIGN_IN',
-			 userid: userid
+			 data: data
+		     };
+		 },
+		 signout(data) {
+		     return {
+			 type: 'SIGN_OUT',
+			 data: data
 		     };
 		 }
 	     };
 	 }
 	 static get properties() {
 	     return {
-		 appState: {
-		     type: String,
-		     statePath: "appState"
+		 resp: {
+		     type: Object,
+		     observer: "_loggin"
 		 }
 	     }
 	 }
-	 _logged(appState){
-	     if (appState === "NOT_LOGGED_IN" ) { return true; }
-	     return false;
+	 _logged(resp){
+	     if (resp.email) return false;
+	     return true;
 	 }
-	 _sendSignIn(event){
-	     alert("signIn");
-	     console.log(event.detail.response);
+	 _loggin(value,oldvalue){
 	     super.connectedCallback();
-	     if ( event) {
-		 this.dispatch("signin",event.detail.response.email);
+	     if ( value.email ) {
+		 this.dispatch("signin",value);
+	     } else if ( oldvalue ) {
+		 this.dispatch("signout",oldvalue);
 	     }
+	     
 	 }
-	 ready() {
-	     super.ready();
-	     window.addEventListener('graph-response', (event) => { this._sendSignIn(event); } );
-	 }
-
 
      }
      window.customElements.define(AvLogin.is, AvLogin);

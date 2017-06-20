@@ -14,6 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="redux-store.html">
 <link rel="import" href="av-open-games.html">
 <link rel="import" href="av-login.html">
+<link rel="import" href="av-join-create.html">
 <dom-module id="my-view1">
   <template>
     <style include="shared-styles">
@@ -24,7 +25,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
     <div class="card">
 	[[appState]]
+	[[loading]]
 	<av-login></av-login>
+	<div hidden$="{{!_isJoinOrCreate(appState)}}">
+	    <av-join-create></av-join-create>
+	</div>
     </div>
   </template>
 
@@ -36,8 +41,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	       appState: {
 		   type: String,
 		   statePath: "appState"
+	       },
+	       loading: {
+		   type: String,
+		   statePath: "loading"
 	       }
 	   }
+       }
+       _isJoinOrCreate(appState){
+	   if (appState === "JOIN_OR_CREATE" ) return true; return false;
        }
       
     }

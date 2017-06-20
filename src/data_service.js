@@ -7,13 +7,12 @@ var dataService = function dataService(store) {
 	      Pass all actions through by default
 	    */
 	    next(action);
-	    console.log("call");
 	    switch (action.type) {
             case 'SIGN_IN':
 		/*
 		  In case we receive an action to send an API request, send the appropriate request
 		*/
-		request.post('http://localhost:3000/logs/').send({userid:action.userid,desc: "signin"}).end(function (err, res) {
+		request.post('http://localhost:3000/logs/').send({data: action.data}).end(function (err, res) {
 		    if (err) {
 			/*
 			  in case there is any error, dispatch an action containing the error
